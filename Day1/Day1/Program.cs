@@ -8,6 +8,7 @@ string input = Console.ReadLine();
 while (input != "")
 {
     var change = int.Parse(input.Substring(1));
+    change = change % 100;
     if (input[0] == 'L')
     {
         current -= change;
@@ -25,7 +26,7 @@ while (input != "")
     input = Console.ReadLine();
 }
 
-Console.WriteLine(zeroCount);
+Console.WriteLine($"Zerocount: {zeroCount}");
 Console.ReadLine();
 
 void AdaptCurrent()
