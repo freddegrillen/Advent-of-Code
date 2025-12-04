@@ -9,7 +9,7 @@ namespace Day1
 
         internal static void Execute()
         {
-            int total = 0;
+            Int64 total = 0;
             List<string> banks = new();
 
             string input = Console.ReadLine();
@@ -21,12 +21,23 @@ namespace Day1
 
            foreach(string bank in banks)
             {
-                var fstIndex = bank.IndexOf(bank.Substring(0, bank.Length - 1).Max());
-                var fstMax = bank[fstIndex];
-                var sndMax = bank.Substring(fstIndex + 1,bank.Length - (fstIndex + 1)).Max();
-                int maxJolt = int.Parse(string.Concat(fstMax, sndMax));
-                total += maxJolt;
-                Console.WriteLine($"Maxjolt: {maxJolt}");
+                var prevIndex = -1;
+                string bankMax = "";
+                for(int i = 12; i > 0; i--)
+                {
+                    var available = bank.Substring(prevIndex + 1, bank.Length - (i + prevIndex));
+                    //var fstIndex = available.IndexOf(available.Max()) + (i == 12 ? 0:prevIndex);
+                    var fstIndex = available.IndexOf(available.Max()) + (prevIndex + 1);
+                    var fstMax = bank[fstIndex];
+                    bankMax += fstMax;
+                    prevIndex = fstIndex;
+                }
+
+
+
+               
+                total += Int64.Parse(bankMax);
+                Console.WriteLine($"BankMax: {bankMax}");
             }
 
             Console.WriteLine($" Final total: {total}");
