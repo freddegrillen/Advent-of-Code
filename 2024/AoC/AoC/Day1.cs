@@ -10,7 +10,7 @@ namespace AoC
         {
             List<int> firstList = new();
             List<int> secondList = new();
-            int totalDiff = 0;
+            int total = 0;
 
             var input = Console.ReadLine();
 
@@ -27,12 +27,16 @@ namespace AoC
 
             for(int i = 0; i < firstList.Count; i++)
             {
-                int diff = int.Abs(secondList[i] - firstList[i]);
-                totalDiff += diff;
-                Console.WriteLine($"Fst: {firstList[i]} Snd:{secondList[i]} Difference:{diff}");
+                //int diff = int.Abs(secondList[i] - firstList[i]);
+                //total += diff;
+                //Console.WriteLine($"Fst: {firstList[i]} Snd:{secondList[i]} Difference:{diff}");
+
+
+                int count = secondList.Select(x => x).Where(y => y == firstList[i]).Count();
+                total += (firstList[i] * count);
 
             }
-            Console.WriteLine(totalDiff);
+            Console.WriteLine(total);
 
 
         }
