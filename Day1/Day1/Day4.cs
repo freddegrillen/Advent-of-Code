@@ -8,9 +8,9 @@ namespace Day1
     {
         internal static void Execute()
         {
-            int total = 0;
+            int fullTotal = 0;
             List<string> rows = new();
-            List<string> debugIllustration = new();
+
 
             string input = Console.ReadLine();
             while (input != "")
@@ -19,50 +19,71 @@ namespace Day1
                 input = Console.ReadLine();
             }
 
-            for(int row = 0; row < rows.Count; row++)
+            bool noAvailable = false;
+            while (!noAvailable)
             {
-                int current = 0; // for debug
-                string rowIllsustration = "";
-
-                for(int roll = 0; roll < rows[row].Length; roll++)
+                List<string> updated = new();
+                int total = 0;
+                for (int row = 0; row < rows.Count; row++)
                 {
-                    if (rows[row][roll] != '@')
-                    {
-                        rowIllsustration += '.';
-                        continue;
-                    }
-                    int adjacent = -1; //-1 to only count adjacent, removes current roll.
+                    int current = 0; // for debug
+                    string rowIllsustration = "";
 
-                    if (row != 0)
+                    for (int roll = 0; roll < rows[row].Length; roll++)
                     {
-                        adjacent += CountRolls(GetSubString(row - 1, roll, rows));
-                    }
+                        if (rows[row][roll] != '@')
+                        {
+                            rowIllsustration += '.';
+                            continue;
+                        }
+                        int adjacent = -1; //-1 to only count adjacent, removes current roll.
 
-                    adjacent += CountRolls(GetSubString(row, roll, rows));
+                        if (row != 0)
+                        {
+                            adjacent += CountRolls(GetSubString(row - 1, roll, rows));
+                        }
 
-                    if (row != rows.Count -1)
-                    {
-                        adjacent += CountRolls(GetSubString(row + 1, roll, rows));
-                    }
+                        adjacent += CountRolls(GetSubString(row, roll, rows));
 
-                    if(adjacent < 4)
-                    {
-                        rowIllsustration += "X";
-                        total++;
-                        current++;
+                        if (row != rows.Count - 1)
+                        {
+                            adjacent += CountRolls(GetSubString(row + 1, roll, rows));
+                        }
+
+                        if (adjacent < 4)
+                        {
+                            rowIllsustration += "X";
+                            total++;
+                            current++;
+                        }
+                        else
+                        {
+                            rowIllsustration += "@";
+                        }
+
                     }
-                    else
-                    {
-                        rowIllsustration += "@";
-                    }
+                    updated.Add(rowIllsustration);
+                    //debugIllustration.Add(rowIllsustration);
+                   // Console.WriteLine($"{rowIllsustration} - {current}");
+                    //Console.WriteLine($"Row: {row +1} - available: {current}");
+
+
 
                 }
-                //debugIllustration.Add(rowIllsustration);
-                Console.WriteLine($"{rowIllsustration} - {current}");
-                //Console.WriteLine($"Row: {row +1} - available: {current}");
+                fullTotal += total;
+                rows = updated;
+
+
+                if (total == 0)
+                {
+                    noAvailable = true;
+                }
             }
 
-            Console.WriteLine($"Total: {total}");
+
+            
+
+            Console.WriteLine($"Total: {fullTotal}");
 
         }
 
