@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Day1
 {
@@ -10,8 +11,8 @@ namespace Day1
         {
             Int64 result = 0;
             string input = Console.ReadLine();
-            var strings = input.Split(',');
-            foreach ( var s in strings)
+            var spans = input.Split(',');
+            foreach ( var s in spans)
             {
                 var stringSpan = s.Split("-");
 
@@ -21,15 +22,9 @@ namespace Day1
                 for (Int64 i = from; i <= to; i++)
                 {
                     var iString = i.ToString();
-                    if (iString.Length % 2 == 0)
+                    if (Regex.IsMatch(iString, "^(.+)\\1+$"))
                     {
-                        int half = (iString.Length / 2);
-
-                        if(iString.Substring(0,half) == iString.Substring(half))
-                        {
-                            result += i;
-                        }
-
+                        result += i;
                     }
                 }
             }
