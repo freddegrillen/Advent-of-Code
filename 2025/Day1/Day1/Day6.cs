@@ -8,42 +8,56 @@ namespace Day1
     {
         internal static void Execute()
         {
-            List<List<string>> inputLists = new();
+            List<string> inputStrings = new();
             Int64 finalResult = 0;
 
             string input = Console.ReadLine();
             while (input != "")
             {
-                var list = input.Split(' ').ToList();
-                list = list.Where(x => !string.IsNullOrEmpty(x)).ToList();
-                inputLists.Add(list);
+                inputStrings.Add(input);
                 input = Console.ReadLine();
             }
 
-            List<string> operations = inputLists.Last();
-            inputLists.RemoveAt(inputLists.Count - 1);
+            string operations = inputStrings.Last();
+            inputStrings.RemoveAt(inputStrings.Count - 1);
 
-            for(int i  = 0; i < operations.Count; i++)
+            List<string> numbers = new();
+            for (int i  = operations.Length - 1; i >= 0 ; i--)
             {
-                Int64 result;
-                if (operations[i] == "+")
+                
+                Int64 result = 0;
+
+                string current = "";
+                foreach(var row in inputStrings)
                 {
-                    result = 0;
-                    foreach(var row in inputLists)
-                    {
-                        result += Int64.Parse(row[i]);
-                    }
-                    finalResult += result;
+                    current += row[i];
+
                 }
-                else
+                if (!string.IsNullOrEmpty(current.Trim()))
+                {
+                    numbers.Add(current);
+                }               
+
+                if (operations[i] == '+')
+                {
+                    foreach (var number in numbers)
+                    {
+                        result += Int64.Parse(number);
+                    }
+                    Console.WriteLine($"result: {result}");
+                    finalResult += result;
+                    numbers.Clear();
+                }
+                else if (operations[i] == '*')
                 {
                     result = 1;
-                    foreach (var row in inputLists)
-                    {
-                        result *= Int64.Parse(row[i]);
+                    foreach (var number in numbers)
+                    {                       
+                        result *= Int64.Parse(number);
                     }
+                    Console.WriteLine($"result: {result}");
                     finalResult += result;
-
+                    numbers.Clear();
                 }
 
             }
