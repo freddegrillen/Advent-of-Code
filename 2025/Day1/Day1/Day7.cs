@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Day1
 {
-    internal static class Day7
+    internal class Day7
     {
-        public static void Execute()
+        private readonly IMemoryCache _memoryCache;
+
+        public Day7(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+
+        public void Execute()
         {
             List<string> rows = new();
-            int splitCount = 0;
+            Int64 splitCount = 1;
 
             string input = Console.ReadLine();
             while (input != "")
@@ -18,28 +26,40 @@ namespace Day1
                 input = Console.ReadLine();
             }
 
-            List<int> prevIndices = new();
-            prevIndices.Add(rows[0].IndexOf('S'));
+            int index = rows[0].IndexOf('S');
+            splitCount += Calculate(rows, index);
 
-            for(int i = 1; i < rows.Count; i++)
-            {
-                List<int> provisional = prevIndices.ToList();
-                foreach (var index in prevIndices)
-                {
-                    
-                    if (rows[i][index] == '^')
-                    {
-                        provisional.Remove(index);
-                        provisional.Add(index - 1);
-                        provisional.Add(index + 1);
-                        splitCount++;
-                    }
-                }
-                prevIndices = provisional.Distinct().ToList();
-                Console.WriteLine($"Row: {i} splitcount: {splitCount}");
-            }
             Console.WriteLine(splitCount);
 
+        }
+
+        private Int64 Calculate(List<string> rows, int index)
+        {
+            var hash = (rows.Count, index).GetHashCode();
+            if (_memoryCache.TryGetValue(hash, out long stored))
+            {
+                return stored;
+            }
+
+            if (rows.Count == 0)
+            {
+                return 0;
+            }
+
+
+            var next = rows.TakeLast(rows.Count - 1).ToList();
+            if (rows[0][index] == '^')
+            {
+                var splits = Calculate(next, index + 1) + Calculate(next, index - 1) + 1;
+                _memoryCache.Set(hash, splits);
+                return splits;
+            }
+            else
+            {
+                var splits = Calculate(next, index);
+                _memoryCache.Set(hash, splits);
+                return splits;
+            }
         }
 
     }
