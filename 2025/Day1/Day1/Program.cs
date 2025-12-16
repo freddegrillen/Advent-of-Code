@@ -14,4 +14,4 @@ using Microsoft.Extensions.Hosting;
 //var day7 = app.Services.GetRequiredService<Day7>();
 //day7.Execute();
 
-Day8.Execute();
+Day9.Execute();
