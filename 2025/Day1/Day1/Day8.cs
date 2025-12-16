@@ -17,11 +17,6 @@ namespace Day1
         public Box box2;
         public double distance;
     }
-    internal class Connection
-    {
-        public Box box1;
-        public Box box2;
-    }
     internal class Circuit
     {
         public List<Box> boxes;
@@ -53,7 +48,7 @@ namespace Day1
                 }
             }
 
-            distances = distances.OrderBy(dist => dist.distance).Take(1000).ToList(); //Take 10 for example data
+            distances = distances.OrderBy(dist => dist.distance).ToList(); //Take 10 for example data
 
             List<Circuit> circuits = new();
             foreach(var box in boxes)
@@ -61,28 +56,25 @@ namespace Day1
                 circuits.Add(new Circuit { boxes = new List<Box> { box } });
             }
 
-
-            foreach(var distance in distances)
+            Distance finalConnection = null;
+            while(circuits.Count > 1)
             {
-                var matches = circuits.Where(c => c.boxes.Contains(distance.box1) || c.boxes.Contains(distance.box2)).ToList();
-
-                if(matches.Count == 2)
+                if(circuits.Count == 2)
                 {
-                    circuits = circuits.Where(c => !(c.boxes.Contains(distance.box1) || c.boxes.Contains(distance.box2))).ToList();
+                    finalConnection = distances[0];
+                }
+                var matches = circuits.Where(c => c.boxes.Contains(distances[0].box1) || c.boxes.Contains(distances[0].box2)).ToList();
+
+                if (matches.Count == 2)
+                {
+                    circuits = circuits.Where(c => !(c.boxes.Contains(distances[0].box1) || c.boxes.Contains(distances[0].box2))).ToList();
                     var merged = matches[0].boxes.Union(matches[1].boxes).ToList();
                     circuits.Add(new Circuit { boxes = merged });
                 }
+                distances.RemoveAt(0);
+            }       
 
-               
-            }
-
-            var chosen = circuits.OrderByDescending(c => c.boxes.Count).ToList().Take(3);
-
-            Int64 result = 1;
-            foreach(var circ in chosen)
-            {
-                result *= circ.boxes.Count;
-            }
+            Int64 result = (finalConnection!.box1.x * finalConnection.box2.x); //Needs to be bigger than Int64, calculated on phone now
             Console.WriteLine( result);
 
         }
