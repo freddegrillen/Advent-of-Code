@@ -49,6 +49,15 @@ namespace Day1
 
 
 
+            /*
+             * Kolla mellan varje punkt neråt från topCorner. Avståndet mellan vare två punkter som höjd, sen kolla på nåt sätt mot motsatta sida för bredd, och kolla största där.
+             * Behöver spara alla linjer innan?
+             * 
+             * 
+             *     */
+
+
+
 
 
 
